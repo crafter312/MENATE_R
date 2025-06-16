@@ -24,6 +24,9 @@
 #include "G4eMultipleScattering.hh"
 #include "G4hIonisation.hh"
 
+// Custom neutron physics
+#include "menate_R_p.hh"
+
 // Factory
 #include "G4PhysicsConstructorFactory.hh"
 G4_DECLARE_PHYSCONSTR_FACTORY(MENATE_R);
@@ -66,7 +69,7 @@ void GRParallelWorldPhysics::ConstructProcess() {
 	// Add neutron physics
 	G4ProcessManager *pManager = G4Neutron::Neutron()->GetProcessManager();
 	G4String theProcessName = "menate_neutron";
-	menate_R* theMENATE = new menate_R(theProcessName);
+	menate_R_p* theMENATE = new menate_R_p(theProcessName);
 	pManager->AddDiscreteProcess(theMENATE);
 
 	// Light ion physics (EM Stopping Power only)

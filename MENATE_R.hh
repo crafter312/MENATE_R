@@ -1,5 +1,5 @@
-#ifndef MENATE_R
-#define MENATE_R
+#ifndef MENATE_R_hh
+#define MENATE_R_hh
 
 #include "G4VPhysicsConstructor.hh"
 #include "globals.hh"
@@ -13,9 +13,9 @@ public:
 public:
 
 	// In this method, static member functions should be called
-  // for all particles which you want to use.
-  // This ensures that objects of these particle types will be
-  // created in the program. 
+	// for all particles which you want to use.
+	// This ensures that objects of these particle types will be
+	// created in the program. 
 	virtual void ConstructParticle();
 
 	// This method will be invoked in the Construct() method.

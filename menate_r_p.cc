@@ -1,9 +1,9 @@
 //--------------------------------------------------------------------
 //--------------------------------------------------------------------
 //
-// menate_R.cc 
+// menate_R_p.cc 
 //
-// Description - contains member functions declared in menate_R.hh
+// Description - contains member functions declared in menate_R_p.hh
 //
 // started on 6 May 2008
 //
@@ -18,7 +18,7 @@
 // -Modifications : Uses non-isotropic angular distributions for
 //                  other processes.
 //---------------------------------------------------------------------
-// Version Comments - (other changes/fixes noted in menate_R.hh)
+// Version Comments - (other changes/fixes noted in menate_R_p.hh)
 //  
 // 23 April 2008 - version 1.0 -> working version -> by Brian Roeder
 // modified functions and cross section read-in functions
@@ -39,7 +39,7 @@
 //-----------------------------------------------------------------
 // 19 May 2008 - new version with modifications - BTR
 //             - Modified angular distributions for n+p, n+12C elastic
-// other changes listed in menate_R.hh.
+// other changes listed in menate_R_p.hh.
 //------------------------------------------------------------------
 // 2011-2012 Zach Kohley Modifications
 // To allow for the Sweeper magnet and sweeper chamber to be included
@@ -55,15 +55,15 @@
 // Code inherited from MoNA-simulation package,
 // https://github.com/baumann3141/MoNA-simulation (cloned 6 Sept 2018, 10:20 AM CDT
 //
-// Changes Made w.r.t. MoNA-simulation version.  Changes were required to make menate_R.cc
+// Changes Made w.r.t. MoNA-simulation version.  Changes were required to make menate_R_p.cc
 // compile within the NPSimulation framework
 //    1.  Added "using namespace CLHEP" to top of file
 //    2.  Added explicit std:: before call to std::isnan
 //    3.  Changed G4ParticleTable::GetParticleTable()->GetIon(...) to
 //        G4IonTable::GetIonTable()->GetIon(...).  The former is not any
 //        longer available for GEANT v10.0 and up.  Also required adding
-//        #include "G4IonTable.hh" to menate_R.hh
-//    4.  Changed menate_R::ReadCrossSectionFile() to look in
+//        #include "G4IonTable.hh" to menate_R_p.hh
+//    4.  Changed menate_R_p::ReadCrossSectionFile() to look in
 //        $NPTOOL/Inputs/CrossSection/MENATE_R
 //    5.  Local variable ElementName changed to ElementName_ to get rid of warning
 //    6.  Commented declaration of DiffNorm variable (use was already commented)
@@ -74,12 +74,12 @@
 //        (fixes mistake in the original)
 //
 
-#include "menate_R.hh"
+#include "menate_R_p.hh"
 #include <cmath>
 #include <iomanip>
 using namespace CLHEP;
 
-menate_R::menate_R(const G4String& processName) : G4VDiscreteProcess(processName)
+menate_R_p::menate_R_p(const G4String& processName) : G4VDiscreteProcess(processName)
 {
   Pi = CLHEP::pi;
   Two_Pi = 2.*Pi;
@@ -188,11 +188,11 @@ menate_R::menate_R(const G4String& processName) : G4VDiscreteProcess(processName
 }
 
 
-menate_R::~menate_R()
+menate_R_p::~menate_R_p()
 {;}
 
 
-G4double menate_R::Absolute(G4double Num)
+G4double menate_R_p::Absolute(G4double Num)
 {
   if(Num < 0.)
     { Num *= -1.;}
@@ -200,7 +200,7 @@ G4double menate_R::Absolute(G4double Num)
   return Num;
 }
 
-G4double menate_R::SIGN(G4double A1, G4double B2)
+G4double menate_R_p::SIGN(G4double A1, G4double B2)
 {
   // Does FORTRAN sign command
   // Return "A1" with the sign of B2
@@ -212,14 +212,14 @@ G4double menate_R::SIGN(G4double A1, G4double B2)
   return A1;
 }
 
-void menate_R::ReadCrossSectionFile(G4String FileName, CrossSectionClass* theReactionXS)
+void menate_R_p::ReadCrossSectionFile(G4String FileName, CrossSectionClass* theReactionXS)
 {
   if(!getenv("NPTOOL")) 
 	{
 		G4cerr << "Please set NPTOOL environment variable!" << G4endl;
 		exit(1);
 	}
-  G4String  DirName = G4String(getenv("NPTOOL")) + "/Inputs/CrossSection/MENATE_R";
+  G4String  DirName = G4String(getenv("NPTOOL")) + "/Inputs/CrossSection/menate_R";
 
   FileName = DirName+"/"+FileName;
 
@@ -275,7 +275,7 @@ void menate_R::ReadCrossSectionFile(G4String FileName, CrossSectionClass* theRea
 } 
 
 
-G4double menate_R::GetCrossSection(G4double KinEng, CrossSectionClass* theReactionXS)
+G4double menate_R_p::GetCrossSection(G4double KinEng, CrossSectionClass* theReactionXS)
 {
   G4double CrossSection=0.;
   G4int NumberOfLines;
@@ -318,7 +318,7 @@ G4double menate_R::GetCrossSection(G4double KinEng, CrossSectionClass* theReacti
   return CrossSection;
 }
 
-G4double menate_R::GetXSInterpolation(G4double KinEng, G4double LowEng, G4double HighEng, 
+G4double menate_R_p::GetXSInterpolation(G4double KinEng, G4double LowEng, G4double HighEng, 
                                          G4double LowXS, G4double HighXS)
 {
   G4double slope = (HighXS-LowXS)/(HighEng-LowEng);
@@ -328,7 +328,7 @@ G4double menate_R::GetXSInterpolation(G4double KinEng, G4double LowEng, G4double
   return Interpol_XS;
 }
 
-G4ThreeVector menate_R::GenMomDir(G4ThreeVector MomDirIn, G4double theta, G4double phi)
+G4ThreeVector menate_R_p::GenMomDir(G4ThreeVector MomDirIn, G4double theta, G4double phi)
 {
   // Generates final momentum direction in frame of initial particle
   // follows routine of "MEN_COMPUTE_DIRECTION"
@@ -379,7 +379,7 @@ G4ThreeVector menate_R::GenMomDir(G4ThreeVector MomDirIn, G4double theta, G4doub
   return MomDirOut;
 }
 
-G4double menate_R::ShareGammaEngC12(G4double Available_Eng)
+G4double menate_R_p::ShareGammaEngC12(G4double Available_Eng)
 {
   // 24 Apr. 2008 - This function translated from original FORTRAN "MENATE_R"
   // Bleeds excitation energy of C12* into 400 keV gamma rays unless there
@@ -405,7 +405,7 @@ G4double menate_R::ShareGammaEngC12(G4double Available_Eng)
 }
 
 
-G4double menate_R::Evaporate_Eng(G4double AMass,G4double Available_Eng)
+G4double menate_R_p::Evaporate_Eng(G4double AMass,G4double Available_Eng)
 {
   // Calculate an energy included between 0 and Available_Eng following a probability
   // density dp/de = e/n*exp(-e/t) --- copied from MENATE_R fortran code
@@ -457,14 +457,14 @@ G4double menate_R::Evaporate_Eng(G4double AMass,G4double Available_Eng)
 }
 
 
-void menate_R::SetMeanFreePathCalcMethod(G4String Method)
+void menate_R_p::SetMeanFreePathCalcMethod(G4String Method)
 {
   CalcMeth = Method;
   G4cout << "The MeanFreePath and Reaction Calculations method is set to : " << CalcMeth << G4endl;
 }
 
 
-G4String menate_R::ChooseReaction()
+G4String menate_R_p::ChooseReaction()
 {
   // Chooses Reaction that is used in PostStepDoIt 
   G4String theReaction = "NoReaction";
@@ -629,7 +629,7 @@ G4String menate_R::ChooseReaction()
 //-----------------------------------------------------------
 // Angular Distribution generators - Added 6 May 2008 BTR
 //-----------------------------------------------------------
-G4double menate_R::NP_AngDist(G4double NEng)
+G4double menate_R_p::NP_AngDist(G4double NEng)
 {
   //NP scattering from DEMONS by Reese, Yariv and Sailor et al.
   //originally written by Stanton
@@ -665,7 +665,7 @@ G4double menate_R::NP_AngDist(G4double NEng)
  return CosCM;
 }
 
-G4double menate_R::NC12_DIFF(G4double NEng)
+G4double menate_R_p::NC12_DIFF(G4double NEng)
 {
   // Generates Angular Distribution for n+12C scattering
   // in center of mass system. Kinematics in PostStepDoIt
@@ -726,7 +726,7 @@ G4double menate_R::NC12_DIFF(G4double NEng)
 }
 
 
-void menate_R::Setup_AlElastic_AngDist(){
+void menate_R_p::Setup_AlElastic_AngDist(){
 
 
   const int num = 146;
@@ -851,7 +851,7 @@ void menate_R::Setup_AlElastic_AngDist(){
 
 }
 
-void menate_R::Setup_FeElastic_AngDist(){
+void menate_R_p::Setup_FeElastic_AngDist(){
 
   const int num = 146;
 
@@ -976,7 +976,7 @@ void menate_R::Setup_FeElastic_AngDist(){
 }
 
 
-G4double menate_R:: AlElastic_AngDist(G4double NEng){
+G4double menate_R_p:: AlElastic_AngDist(G4double NEng){
   double ang_CM = 0;
 
   if(NEng<=15*MeV) ang_CM = G4UniformRand();
@@ -987,7 +987,7 @@ G4double menate_R:: AlElastic_AngDist(G4double NEng){
   return ang_CM;
 }
 
-G4double menate_R:: FeElastic_AngDist(G4double NEng){
+G4double menate_R_p:: FeElastic_AngDist(G4double NEng){
   double ang_CM = 0;
 
   if(NEng<=15*MeV) ang_CM = G4UniformRand();
@@ -1005,7 +1005,7 @@ G4double menate_R:: FeElastic_AngDist(G4double NEng){
 //----------------------------------------------------------------------
 
  
-G4bool menate_R::IsApplicable(const G4ParticleDefinition& particle)
+G4bool menate_R_p::IsApplicable(const G4ParticleDefinition& particle)
 { 
 // returns "true" if this model can be applied to the particle-type
   //G4cout << "IsApplicable loaded!" << G4endl;
@@ -1023,7 +1023,7 @@ G4bool menate_R::IsApplicable(const G4ParticleDefinition& particle)
 }
 
 
-G4double menate_R::GetMeanFreePath(const G4Track& aTrack, G4double, // previousStepSize, 
+G4double menate_R_p::GetMeanFreePath(const G4Track& aTrack, G4double, // previousStepSize, 
                                       G4ForceCondition* condition) 
 {
   //G4cout << "menate_R GetMeanFreePath called!" << G4endl;
@@ -1335,7 +1335,7 @@ G4double menate_R::GetMeanFreePath(const G4Track& aTrack, G4double, // previousS
 }
 
 
-G4VParticleChange* menate_R::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
+G4VParticleChange* menate_R_p::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 {
   // Now we tell GEANT what to do if MeanFreePath condition is satisfied!
   // Overrides PostStepDoIt function in G4VDiscreteProcess

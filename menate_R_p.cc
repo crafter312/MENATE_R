@@ -75,9 +75,15 @@
 //
 
 #include "menate_R_p.hh"
+
+#include "G4SystemOfUnits.hh"
+
 #include <cmath>
 #include <iomanip>
-using namespace CLHEP;
+#include <string>
+#include <filesystem>
+
+namespace fs = std::filesystem;
 
 menate_R_p::menate_R_p(const G4String& processName) : G4VDiscreteProcess(processName)
 {
@@ -88,12 +94,14 @@ menate_R_p::menate_R_p(const G4String& processName) : G4VDiscreteProcess(process
                         // If Used with materials other than C12, need to
                         // give atomic Mass here or in PostStepDoIt Method (as for NE213)
 
+
   CalcMeth="ORIGINAL";
 
   G4cout << "Constructor for menate_R process was called! " << G4endl;
   G4cout << "A non-relativistic model for n - scattering ";
   G4cout << "on carbon and hydrogen or materials composed of it (e.g. NE213)" << G4endl;
-  G4cout << "You are using MENATE_R version 1.4, finished 19 May 2008 - BTR" << G4endl;
+  G4cout << "Now includes updates for Aluminum and Iron scattering from Zach Kohley, 2011 -2012" << G4endl;
+  G4cout << "You are using MENATE_R_ZK version 1.5, updated 7 Aug 2020 - BTR" << G4endl;
 
   Setup_FeElastic_AngDist();
   Setup_AlElastic_AngDist();
@@ -128,9 +136,7 @@ menate_R_p::menate_R_p(const G4String& processName) : G4VDiscreteProcess(process
 	  if(theElementName == "Hydrogen" || theElementName == "H")
 	    { H_Switch = true; } // Hydrogen defined 
 	  else if(theElementName == "Carbon" || theElementName == "C")
-	    {C_Switch = true;
-	    } // Carbon defined
-	    
+	    { C_Switch = true; } // Carbon defined
 	  else if(theElementName == "Iron" || theElementName == "Fe")
 	    { Fe_Switch = true; } // Iron defined
 	  else if(theElementName == "Aluminum" || theElementName == "Al")
@@ -214,12 +220,20 @@ G4double menate_R_p::SIGN(G4double A1, G4double B2)
 
 void menate_R_p::ReadCrossSectionFile(G4String FileName, CrossSectionClass* theReactionXS)
 {
-  if(!getenv("NPTOOL")) 
-	{
-		G4cerr << "Please set NPTOOL environment variable!" << G4endl;
-		exit(1);
-	}
-  G4String  DirName = G4String(getenv("NPTOOL")) + "/Inputs/CrossSection/menate_R";
+  G4cout << "Looking for MENATE_R cross-section files in: " << std::string(MENATEG4XS) << G4endl;
+  if(!fs::is_directory(fs::path(MENATEG4XS)))
+  {
+    G4cerr << "WARNING: Compile-time variable MENATEG4XS is not a directory." << G4endl;
+    G4cerr << "         Please set MENATEG4XS to point to MENATE cross-section files!" << G4endl;
+    enum G4ExceptionSeverity severity;
+    severity = FatalException;
+    G4Exception("Program aborted in menate_R_p::ReadCrossSectionFile()","",severity,"");
+  }
+  G4String  DirName = std::string(MENATEG4XS);
+
+  // If difficult to use environment variables, you can just hard code the path to the
+  // cross section files here! However, each user needs to modify this line:
+  //G4String  DirName = "/Users/roederb1/geant4_v11/Simulations/Margot_EU_g4v11/MENATE_CrossSections/MENATEG4";
 
   FileName = DirName+"/"+FileName;
 

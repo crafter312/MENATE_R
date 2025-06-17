@@ -7,6 +7,10 @@ find_package(Geant4 REQUIRED)
 # Find the ROOT package
 find_package(ROOT REQUIRED COMPONENTS Hist)
 
+# Define data file path
+set(MENATEG4XS ${CMAKE_CURRENT_SOURCE_DIR}/new_MENATE_R)
+add_definitions(-DMENATEG4XS=\"${MENATEG4XS}\")
+
 # Define the library name and source files
 file(GLOB MENATE_R_SRC *.cc)
 add_library(MENATE_R STATIC ${MENATE_R_SRC})

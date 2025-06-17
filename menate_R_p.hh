@@ -119,6 +119,18 @@
 //
 // Original files/class renamed menate_R -> menate_R_p to avoid confusion.
 // See MENATE_R.cc for implementation.
+//
+// Also added CMakeLists.txt to compile MENATE_R as library/submodule for
+// external project. Assuming this file is located in the lib/MENATE_R/
+// subdirectory of your project, add something likethe following to your
+// project's main CMakeLists.txt file:
+//
+//   # Include the lib/MENATE_R subdirectory
+//   add_subdirectory(lib/MENATE_R)
+//
+//   add_executable([PROJECT TARGET NAME] [PROJECT SOURCE FILES])
+//   target_link_libraries([PROJECT TARGET NAME] ${Geant4_LIBRARIES} MENATE_R)
+//---------------------------------------------------------------------------
 
 #ifndef menate_R_p_hh 
 #define menate_R_p_hh

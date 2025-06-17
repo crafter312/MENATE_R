@@ -69,32 +69,6 @@ void MENATE_R::ConstructProcess() {
 	G4String theProcessName = "menate_neutron";
 	menate_R_p* theMENATE = new menate_R_p(theProcessName);
 	pManager->AddDiscreteProcess(theMENATE);
-
-	// Light ion physics (EM Stopping Power only)
-	pManager = G4Proton::Proton()->GetProcessManager();
-	pManager->AddProcess(new G4hMultipleScattering, -1, 1, 1);
-	pManager->AddProcess(new G4ionIonisation,       -1, 2, 2);
-
-	pManager = G4Deuteron::Deuteron()->GetProcessManager();
-	pManager->AddProcess(new G4hMultipleScattering, -1, 1, 1);
-	pManager->AddProcess(new G4ionIonisation,       -1, 2, 2);
-
-	pManager = G4Triton::Triton()->GetProcessManager();
-	pManager->AddProcess(new G4hMultipleScattering, -1, 1, 1);
-	pManager->AddProcess(new G4ionIonisation,       -1, 2, 2);
-
-	pManager = G4He3::He3()->GetProcessManager();
-	pManager->AddProcess(new G4hMultipleScattering, -1, 1, 1);
-	pManager->AddProcess(new G4ionIonisation,       -1, 2, 2);
-
-	pManager = G4Alpha::Alpha()->GetProcessManager();
-	pManager->AddProcess(new G4hMultipleScattering, -1, 1, 1);
-	pManager->AddProcess(new G4ionIonisation,       -1, 2, 2);
-       	 
-	// Generic ion physics (EM Stopping Power only)
-	pManager = G4GenericIon::GenericIon()->GetProcessManager();
-	pManager->AddProcess(new G4hMultipleScattering, -1, 1, 1);
-	pManager->AddProcess(new G4ionIonisation,       -1, 2, 2);
 }
 
 

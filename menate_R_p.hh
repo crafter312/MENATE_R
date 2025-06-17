@@ -130,6 +130,13 @@
 //
 //   add_executable([PROJECT TARGET NAME] [PROJECT SOURCE FILES])
 //   target_link_libraries([PROJECT TARGET NAME] ${Geant4_LIBRARIES} MENATE_R)
+//
+// 17 June 2025
+// Reverted NPTool changes inherited from the MoNA-simulation package.
+// MENATEG4XS file path variable pointing to cross-section files is now
+// defined during compile time in CMakeLists.txt, and by default points
+// to new_MENATE_R. This can be changed in CMakeLists.txt if one wishes
+// to put the cross-section files elsewhere.
 //---------------------------------------------------------------------------
 
 #ifndef menate_R_p_hh 

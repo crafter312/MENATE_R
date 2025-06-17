@@ -83,6 +83,8 @@
 #include <string>
 #include <filesystem>
 
+using namespace CLHEP;
+
 namespace fs = std::filesystem;
 
 menate_R_p::menate_R_p(const G4String& processName) : G4VDiscreteProcess(processName)
@@ -283,7 +285,7 @@ void menate_R_p::ReadCrossSectionFile(G4String FileName, CrossSectionClass* theR
     {
       G4cerr << "File = " << FileName << " not found or in improper format." << G4endl;
       enum G4ExceptionSeverity severity;
-      severity = JustWarning;
+      severity = FatalException;
       G4Exception("Program aborted in menate::ReadCrossSectionFile() method!","",severity,"");
     }
 } 
@@ -293,8 +295,7 @@ G4double menate_R_p::GetCrossSection(G4double KinEng, CrossSectionClass* theReac
 {
   G4double CrossSection=0.;
   G4int NumberOfLines;
-      NumberOfLines = theReactionXS[0].GetNumberOfLines();	
-      
+      NumberOfLines = theReactionXS[0].GetNumberOfLines();
       if(KinEng > (theReactionXS[NumberOfLines-1].GetKinEng()))
 	{ 
         G4cout << "The Neutron Energy is higher than the Total Cross Section DataFile!" << G4endl;

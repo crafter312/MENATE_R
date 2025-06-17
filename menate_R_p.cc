@@ -241,7 +241,7 @@ void menate_R_p::ReadCrossSectionFile(G4String FileName, CrossSectionClass* theR
 	  G4double theCrossSection;
 	  theFile >> theEnergy >> theCrossSection;
 	  
-	  if(FileName.contains("Iron") || FileName.contains("Al27") ){
+	  if(G4StrUtil::contains(FileName, "Iron") || G4StrUtil::contains(FileName, "Al27") ){
 	    theReactionXS[k].SetNumberOfLines(NumberOfLines);
 	    theReactionXS[k].SetElementName(ElementName_);
 	    theReactionXS[k].SetKinEng(theEnergy*eV);
@@ -255,7 +255,7 @@ void menate_R_p::ReadCrossSectionFile(G4String FileName, CrossSectionClass* theR
 	  }
 
 	  /*//zwk adjusting cross sections
-	  if(FileName.contains("nng4")){
+	  if(G4StrUtil::contains(FileName, "nng4")){
 	    theReactionXS[k].SetTotalCrossSection(50*theCrossSection*barn);
 	    G4cout << "nng4 cross section enhanced :) !!" << G4endl;
 	  }

@@ -1,7 +1,7 @@
-//----------------------------------------------------------------------
-//----------------------------------------------------------------------
+//---------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 //
-// menate_R.hh 
+// menate_R_p.hh 
 //
 // Description - a GEANT4 discrete process that models neutron
 // elastic scattering with non-relativistic kinematics.
@@ -20,29 +20,29 @@
 // Uses cross sections from A. Del Geuerra et al., NIM 135 Pg. 337 (1976).
 // except for n-p and n-12C elastic scattering total cross sections 
 // that come from MCNPx.
-//-----------------------------------------------------------------------
-//-----------------------------------------------------------------------
+//---------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 // To include in physics list :
-//  #include "menate_R.hh"
+//  #include "menate_R_p.hh"
 //  pManager = G4Neutron::Neutron()->GetProcessManager();
 // 	
 //    G4String NeutronProcessName = "menateR_neutron";
-//    menate_R* theMenate = new menate_R(NeutronProcessName);
+//    menate_R_p* theMenate = new menate_R_p(NeutronProcessName);
 //    theMenate->SetMeanFreePathCalcMethod("ORIGINAL");
 //
 //  pManager->AddDiscreteProcess(theMenate);
 // 
 // -> Need also to set an environment variable called: MENATEG4XS
 //    to point towards the total cross section data file directory.
-//-----------------------------------------------------------------------
-//-----------------------------------------------------------------------
+//---------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 // version comments
-//----------------------------------------------------------------------
+//---------------------------------------------------------------------------
 // version 0.1 - 18 Apr. 2008
 // added elastic scattering and kinetmatics from :
 // n+H1 -> n + p out (elastic)
 // n+12C -> n + 12C (elastic)
-//------------------------------------------------------------
+//---------------------------------------------------------------------------
 // version 1.0 - 23 Apr 2008 -> working version
 // modified functions and cross section read-in functions
 // added all reactions considered in original MENATE including:
@@ -60,26 +60,26 @@
 // PostStepDoIt chooses reaction
 // **** This version includes fix in "Available_Eng" for
 // Alpha2 in process 12C(n,n')3a (bug in FORTRAN version of MENATE)
-//-------------------------------------------------------------------------
-//-------------------------------------------------------------------------
+//---------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 // version 1.1 - 24 Apr 2008 -> working version
 // added function "ShareGammaEngC12()" to kinematics for 12C(n,n'g)12C*
 // process as in original MENATE FORTRAN code. This change effects NE213
 // efficiency in DEMON module between about 5-11 MeV, making the result
 // of the GEANT+MENATE efficiency calc. closer to that obtained by original
 // MENATE code. Efficiency below 5 MeV in GEANT code not changed.
-//-------------------------------------------------------------------------
-//-------------------------------------------------------------------------
+//---------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 // 25 April 2008 - version 1.2 BTR
 // ---- Add Normalization of Momentum ThreeVector in GenMomDir to avoid
 // G4 Error Message. Noted that Norm diff from 1 is always less then 1e-7, so 
 // error is probably due to slight rounding error.
-//-------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 // 28 April 2008 - version 1.2b BTR
 // ---- Added getenv command to ReadCrossSectionFile() Function
 // Program looks for environment variable MENATEG4XS to find cross sections
 // for use with menate.cc, otherwise throws exception.
-//-------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 // 29 April 2008 - version 1.3 BTR
 // --- Noted that MeanFreePath and reaction selection calculations are 
 // different from method used in previous version. Added function
@@ -103,18 +103,44 @@
 // -------------------------------------------------------------------------- 
 // 2011-2012 Zach Kohley, see .hh file for detials of modification and addition
 // of Al and Fe material
-//--------------------------------------------------------------------------
+//---------------------------------------------------------------------------
 //
 // 6 Sept 2018
 // Added to NPTool package by Greg Christian (TAMU), gchristian@tamu.edu
 // Code inherited from MoNA-simulation package,
 // https://github.com/baumann3141/MoNA-simulation
 //
-// See menate_R.cc for list of changes made w.r.t. the
+// See menate_R_p.cc for list of changes made w.r.t. the
 // MoNA-simulation version
+//---------------------------------------------------------------------------
+// 16 June 2025
+// G4VPhysicsConstructor implementation added for easy integration into
+// a G4VModularPhysicsList by Henry Webb (WU), h.s.webb@wustl.edu
+//
+// Original files/class renamed menate_R -> menate_R_p to avoid confusion.
+// See MENATE_R.cc for implementation.
+//
+// Also added CMakeLists.txt to compile MENATE_R as library/submodule for
+// external project. Assuming this file is located in the lib/MENATE_R/
+// subdirectory of your project, add something likethe following to your
+// project's main CMakeLists.txt file:
+//
+//   # Include the lib/MENATE_R subdirectory
+//   add_subdirectory(lib/MENATE_R)
+//
+//   add_executable([PROJECT TARGET NAME] [PROJECT SOURCE FILES])
+//   target_link_libraries([PROJECT TARGET NAME] ${Geant4_LIBRARIES} MENATE_R)
+//
+// 17 June 2025
+// Reverted NPTool changes inherited from the MoNA-simulation package.
+// MENATEG4XS file path variable pointing to cross-section files is now
+// defined during compile time in CMakeLists.txt, and by default points
+// to new_MENATE_R. This can be changed in CMakeLists.txt if one wishes
+// to put the cross-section files elsewhere.
+//---------------------------------------------------------------------------
 
-#ifndef menate_R_hh 
-#define menate_R_hh
+#ifndef menate_R_p_hh 
+#define menate_R_p_hh
 
 #include "globals.hh"
 #include "G4VDiscreteProcess.hh"
@@ -203,15 +229,15 @@ public:
 }; 
 #endif 
 
-class menate_R : public G4VDiscreteProcess
+class menate_R_p : public G4VDiscreteProcess
 {
 public:
 
   // constructor
-  menate_R(const G4String& processName="menate_R");
+  menate_R_p(const G4String& processName="menate_R_p");
 
   // destructor
-  ~menate_R();
+  ~menate_R_p();
 
 public:
   // These are the functions in the Process: Derived from G4VDiscreteProcess.hh
@@ -233,10 +259,10 @@ public:
 private:
 
  // Hide assignment operator as private 
-  menate_R& operator=(const menate_R &right);
+  menate_R_p& operator=(const menate_R_p &right);
 
   // Copy constructor
-  menate_R(const menate_R&);
+  menate_R_p(const menate_R_p&);
 
   // Chooses Reaction in PostStepDoIt
 

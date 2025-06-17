@@ -21,8 +21,8 @@
 #include "G4MesonConstructor.hh"
 
 // Light ion physics
-#include "G4eMultipleScattering.hh"
-#include "G4hIonisation.hh"
+#include "G4hMultipleScattering.hh"
+#include "G4ionIonisation.hh"
 
 // Custom neutron physics
 #include "menate_R_p.hh"
@@ -34,8 +34,6 @@ G4_DECLARE_PHYSCONSTR_FACTORY(MENATE_R);
 MENATE_R::MENATE_R(const G4String& name) : G4VPhysicsConstructor(name) {}
 
 MENATE_R::~MENATE_R() {}
-
-void MENATE_R::MENATE_R() {}
 
 void MENATE_R::ConstructParticle() {
 	G4Geantino::GeantinoDefinition();
@@ -64,7 +62,7 @@ void MENATE_R::ConstructParticle() {
 	pIons.ConstructParticle();
 }
 
-void GRParallelWorldPhysics::ConstructProcess() {
+void MENATE_R::ConstructProcess() {
 
 	// Add neutron physics
 	G4ProcessManager *pManager = G4Neutron::Neutron()->GetProcessManager();
@@ -75,7 +73,7 @@ void GRParallelWorldPhysics::ConstructProcess() {
 	// Light ion physics (EM Stopping Power only)
 	pManager = G4Proton::Proton()->GetProcessManager();
 	pManager->AddProcess(new G4hMultipleScattering, -1, 1, 1);
-	pManager->AddProcess(new G4hIonisation,         -1, 2, 2);
+	pManager->AddProcess(new G4ionIonisation,       -1, 2, 2);
 
 	pManager = G4Deuteron::Deuteron()->GetProcessManager();
 	pManager->AddProcess(new G4hMultipleScattering, -1, 1, 1);
